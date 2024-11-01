@@ -1,26 +1,25 @@
-// Підключаємо необхідні бібліотеки
+// підключаю бібліотеки
 use std::io;
 use std::str::FromStr;
 
-// Оголошуємо головну функцію
 fn main() {
 
-    // Змінна для зберігання останнього результату операції
+    // останній результат операції
     let mut last_result: Option<f64> = None;
 
     loop {
-        // Виводимо повідомлення та запитуємо користувача на вхід
+        // ввід користувача
         println!("Введіть перше число (або 'exit' для виходу):");
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("Помилка при зчитуванні рядка.");
         
-        // Перевіряємо чи користувач хоче вийти
+        // вихід
         if input.trim().eq("exit") {
             println!("Дякуємо за користування калькулятором!");
             break;
         }
 
-        // Пробуємо перетворити вхід на число
+        // конвертую string в число
         let num1: f64 = match input.trim().parse() {
             Ok(n) => n,
             Err(_) => {
@@ -29,17 +28,18 @@ fn main() {
             }
         };
 
-        // Запитуємо оператор
+        // оператор
         println!("Введіть оператор (+, -, *, /):");
         let mut operator = String::new();
         io::stdin().read_line(&mut operator).expect("Помилка при зчитуванні рядка.");
         let operator = operator.trim();
 
-        // Запитуємо друге число
+        // друге число
         println!("Введіть друге число:");
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("Помилка при зчитуванні рядка.");
         
+        // конвертую string в число
         let num2: f64 = match input.trim().parse() {
             Ok(n) => n,
             Err(_) => {
@@ -48,7 +48,7 @@ fn main() {
             }
         };
 
-        // Виконуємо операцію
+        // обчислення
         let result = match operator {
             "+" => num1 + num2,
             "-" => num1 - num2,
@@ -67,10 +67,8 @@ fn main() {
             }
         };
 
-        // Зберігаємо результат
         last_result = Some(result);
 
-        // Виводимо результат
         println!("Результат: {}", result);
     }
 }

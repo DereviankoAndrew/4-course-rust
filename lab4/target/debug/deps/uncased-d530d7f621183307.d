@@ -1,0 +1,10 @@
+/Users/andriiderevianko/Documents/GitHub/4-course-rust/lab4/target/debug/deps/libuncased-d530d7f621183307.rmeta: /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/lib.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/owned.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/borrowed.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/as_uncased.rs
+
+/Users/andriiderevianko/Documents/GitHub/4-course-rust/lab4/target/debug/deps/libuncased-d530d7f621183307.rlib: /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/lib.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/owned.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/borrowed.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/as_uncased.rs
+
+/Users/andriiderevianko/Documents/GitHub/4-course-rust/lab4/target/debug/deps/uncased-d530d7f621183307.d: /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/lib.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/owned.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/borrowed.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/as_uncased.rs
+
+/Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/lib.rs:
+/Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/owned.rs:
+/Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/borrowed.rs:
+/Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/as_uncased.rs:

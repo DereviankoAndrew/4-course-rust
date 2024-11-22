@@ -1,0 +1,10 @@
+/Users/andriiderevianko/Documents/GitHub/4-course-rust/lab4/target/debug/deps/libfutures_task-23c7d66f46704a1a.rmeta: /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/lib.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/spawn.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/future_obj.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/noop_waker.rs
+
+/Users/andriiderevianko/Documents/GitHub/4-course-rust/lab4/target/debug/deps/libfutures_task-23c7d66f46704a1a.rlib: /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/lib.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/spawn.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/future_obj.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/noop_waker.rs
+
+/Users/andriiderevianko/Documents/GitHub/4-course-rust/lab4/target/debug/deps/futures_task-23c7d66f46704a1a.d: /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/lib.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/spawn.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/future_obj.rs /Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/noop_waker.rs
+
+/Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/lib.rs:
+/Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/spawn.rs:
+/Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/future_obj.rs:
+/Users/andriiderevianko/.cargo/registry/src/index.crates.io-6f17d22bba15001f/futures-task-0.3.31/src/noop_waker.rs:

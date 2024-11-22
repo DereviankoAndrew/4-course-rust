@@ -1,185 +1,212 @@
-use std::fmt;
-use std::fs::File;
-use std::io::{self, BufRead, Write};
-use std::path::Path;
+use std::collections::HashMap;
+use std::fs::{self, File};
+use std::io::{self, BufRead, BufReader, Write};
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 struct Task {
     description: String,
-    is_done: bool,
+    completed: bool,
 }
 
 impl Task {
-    fn new(description: String) -> Task {
+    fn new(description: String) -> Self {
         Task {
             description,
-            is_done: false,
+            completed: false,
         }
-    }
-
-    fn mark_done(&mut self) {
-        self.is_done = true;
-    }
-}
-
-impl fmt::Display for Task {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let status = if self.is_done { "✔" } else { "✘" };
-        write!(f, "[{}] {}", status, self.description)
     }
 }
 
 struct TodoList {
-    tasks: Vec<Task>,
+    tasks: HashMap<u32, Task>,
+    next_id: u32,
 }
 
 impl TodoList {
-    fn new() -> TodoList {
-        TodoList { tasks: Vec::new() }
-    }
-
-    fn add_task(&mut self, task: Task) {
-        self.tasks.push(task);
-    }
-
-    fn remove_task(&mut self, index: usize) -> Result<(), String> {
-        if index < self.tasks.len() {
-            self.tasks.remove(index);
-            Ok(())
-        } else {
-            Err("Invalid task index".to_string())
+    fn new() -> Self {
+        TodoList {
+            tasks: HashMap::new(),
+            next_id: 1,
         }
     }
 
-    fn edit_task(&mut self, index: usize, new_description: String) -> Result<(), String> {
-        if index < self.tasks.len() {
-            self.tasks[index].description = new_description;
-            Ok(())
+    fn add_task(&mut self, description: String) {
+        let task = Task::new(description);
+        self.tasks.insert(self.next_id, task);
+        println!("Task added with ID {}", self.next_id);
+        self.next_id += 1;
+    }
+
+    fn delete_task(&mut self, id: u32) {
+        if self.tasks.remove(&id).is_some() {
+            println!("Task {} removed", id);
         } else {
-            Err("Invalid task index".to_string())
+            println!("Task with ID {} not found", id);
         }
     }
 
-    fn mark_done(&mut self, index: usize) -> Result<(), String> {
-        if index < self.tasks.len() {
-            self.tasks[index].mark_done();
-            Ok(())
+    fn edit_task(&mut self, id: u32, new_description: String) {
+        if let Some(task) = self.tasks.get_mut(&id) {
+            task.description = new_description;
+            println!("Task {} updated", id);
         } else {
-            Err("Invalid task index".to_string())
+            println!("Task with ID {} not found", id);
+        }
+    }
+
+    fn mark_completed(&mut self, id: u32) {
+        if let Some(task) = self.tasks.get_mut(&id) {
+            task.completed = true;
+            println!("Task {} marked as completed", id);
+        } else {
+            println!("Task with ID {} not found", id);
         }
     }
 
     fn list_tasks(&self) {
-        for (i, task) in self.tasks.iter().enumerate() {
-            println!("{}: {}", i + 1, task);
+        for (id, task) in &self.tasks {
+            println!(
+                "ID: {}, Description: {}, Completed: {}",
+                id,
+                task.description,
+                task.completed
+            );
         }
     }
 
-    fn save_to_file(&self, filename: &str) -> io::Result<()> {
-        let mut file = File::create(filename)?;
-        for task in &self.tasks {
-            writeln!(file, "{},{}", task.description, task.is_done)?;
+    fn save_to_file(&self, filename: &str) {
+        let mut file = File::create(filename).expect("Unable to create file");
+        for (id, task) in &self.tasks {
+            writeln!(
+                file,
+                "{}|{}|{}",
+                id, task.description, task.completed
+            )
+            .expect("Unable to write to file");
         }
-        Ok(())
+        println!("Tasks saved to {}", filename);
     }
 
-    fn load_from_file(&mut self, filename: &str) -> io::Result<()> {
-        let path = Path::new(filename);
-        let file = File::open(&path)?;
-        let reader = io::BufReader::new(file);
+    fn load_from_file(&mut self, filename: &str) {
+        let file = File::open(filename).expect("Unable to open file");
+        let reader = BufReader::new(file);
 
         self.tasks.clear();
+        self.next_id = 1;
+
         for line in reader.lines() {
-            let line = line?;
-            let parts: Vec<&str> = line.split(',').collect();
-            if parts.len() == 2 {
-                let description = parts[0].to_string();
-                let is_done = parts[1] == "true";
-                self.tasks.push(Task {
-                    description,
-                    is_done,
-                });
+            let line = line.expect("Unable to read line");
+            let parts: Vec<&str> = line.split('|').collect();
+            if parts.len() == 3 {
+                let id: u32 = parts[0].parse().expect("Invalid ID");
+                let description = parts[1].to_string();
+                let completed: bool = parts[2].parse().expect("Invalid completion status");
+
+                self.tasks.insert(
+                    id,
+                    Task {
+                        description,
+                        completed,
+                    },
+                );
+                self.next_id = self.next_id.max(id + 1);
             }
         }
-        Ok(())
+        println!("Tasks loaded from {}", filename);
     }
 }
 
 fn main() {
     let mut todo_list = TodoList::new();
-    let filename = "todo_list.txt";
-
-    // Спроба завантажити збережений список завдань
-    match todo_list.load_from_file(filename) {
-        Ok(_) => println!("Завантажено список завдань."),
-        Err(_) => println!("Файл списку завдань не знайдено, починаємо з порожнього списку."),
-    }
+    let filename = "tasks.txt";
 
     loop {
-        println!("\n1. Додати завдання\n2. Видалити завдання\n3. Редагувати завдання\n4. Позначити виконаним\n5. Показати список\n6. Зберегти та вийти");
-        print!("Виберіть опцію: ");
-        io::stdout().flush().unwrap();
+        println!("\nTODO LIST:");
+        println!("1. Add Task");
+        println!("2. Delete Task");
+        println!("3. Edit Task");
+        println!("4. Mark Task as Completed");
+        println!("5. List Tasks");
+        println!("6. Save Tasks");
+        println!("7. Load Tasks");
+        println!("8. Exit");
 
-        let mut input = String::new();
-        io::stdin().read_line(&mut input).unwrap();
-        let choice = input.trim();
+        let mut choice = String::new();
+        io::stdin().read_line(&mut choice).expect("Failed to read input");
+        let choice: u32 = match choice.trim().parse() {
+            Ok(num) => num,
+            Err(_) => {
+                println!("Invalid choice. Please enter a number.");
+                continue;
+            }
+        };
 
         match choice {
-            "1" => {
-                print!("Введіть опис завдання: ");
-                io::stdout().flush().unwrap();
+            1 => {
+                println!("Enter task description:");
                 let mut description = String::new();
-                io::stdin().read_line(&mut description).unwrap();
-                let description = description.trim().to_string();
-                todo_list.add_task(Task::new(description));
+                io::stdin().read_line(&mut description).expect("Failed to read input");
+                todo_list.add_task(description.trim().to_string());
             }
-            "2" => {
-                print!("Введіть номер завдання для видалення: ");
-                io::stdout().flush().unwrap();
-                let mut index_str = String::new();
-                io::stdin().read_line(&mut index_str).unwrap();
-                let index: usize = index_str.trim().parse().unwrap_or(0);
-                if let Err(e) = todo_list.remove_task(index - 1) {
-                    println!("{}", e);
-                }
+            2 => {
+                println!("Enter task ID to delete:");
+                let mut id = String::new();
+                io::stdin().read_line(&mut id).expect("Failed to read input");
+                let id: u32 = match id.trim().parse() {
+                    Ok(num) => num,
+                    Err(_) => {
+                        println!("Invalid ID.");
+                        continue;
+                    }
+                };
+                todo_list.delete_task(id);
             }
-            "3" => {
-                print!("Введіть номер завдання для редагування: ");
-                io::stdout().flush().unwrap();
-                let mut index_str = String::new();
-                io::stdin().read_line(&mut index_str).unwrap();
-                let index: usize = index_str.trim().parse().unwrap_or(0);
-                print!("Введіть новий опис завдання: ");
-                io::stdout().flush().unwrap();
-                let mut new_description = String::new();
-                io::stdin().read_line(&mut new_description).unwrap();
-                let new_description = new_description.trim().to_string();
-                if let Err(e) = todo_list.edit_task(index - 1, new_description) {
-                    println!("{}", e);
-                }
+            3 => {
+                println!("Enter task ID to edit:");
+                let mut id = String::new();
+                io::stdin().read_line(&mut id).expect("Failed to read input");
+                let id: u32 = match id.trim().parse() {
+                    Ok(num) => num,
+                    Err(_) => {
+                        println!("Invalid ID.");
+                        continue;
+                    }
+                };
+
+                println!("Enter new description:");
+                let mut description = String::new();
+                io::stdin().read_line(&mut description).expect("Failed to read input");
+                todo_list.edit_task(id, description.trim().to_string());
             }
-            "4" => {
-                print!("Введіть номер завдання для позначення як виконаного: ");
-                io::stdout().flush().unwrap();
-                let mut index_str = String::new();
-                io::stdin().read_line(&mut index_str).unwrap();
-                let index: usize = index_str.trim().parse().unwrap_or(0);
-                if let Err(e) = todo_list.mark_done(index - 1) {
-                    println!("{}", e);
-                }
+            4 => {
+                println!("Enter task ID to mark as completed:");
+                let mut id = String::new();
+                io::stdin().read_line(&mut id).expect("Failed to read input");
+                let id: u32 = match id.trim().parse() {
+                    Ok(num) => num,
+                    Err(_) => {
+                        println!("Invalid ID.");
+                        continue;
+                    }
+                };
+                todo_list.mark_completed(id);
             }
-            "5" => {
+            5 => {
                 todo_list.list_tasks();
             }
-            "6" => {
-                if let Err(e) = todo_list.save_to_file(filename) {
-                    println!("Помилка збереження: {}", e);
-                } else {
-                    println!("Список збережено.");
-                }
+            6 => {
+                todo_list.save_to_file(filename);
+            }
+            7 => {
+                todo_list.load_from_file(filename);
+            }
+            8 => {
+                println!("Exiting...");
                 break;
             }
-            _ => println!("Невірний вибір!"),
+            _ => {
+                println!("Invalid choice. Please select a valid option.");
+            }
         }
     }
 }
